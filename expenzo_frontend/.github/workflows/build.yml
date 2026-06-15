@@ -1,0 +1,39 @@
+name: Flutter Build APK Update
+
+on:
+  push:
+    branches:
+      - main # Triggers the build every time you push to the main branch
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+
+      - name: Install Dependencies
+        run: flutter pub get
+        working-directory: expenzo_frontend
+
+      - name: Build APK
+        run: flutter build apk --release
+        working-directory: expenzo_frontend
+
+      - name: Upload APK to GitHub Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: expenzo-app-update
+          path: expenzo_frontend/build/app/outputs/flutter-apk/app-release.apk
