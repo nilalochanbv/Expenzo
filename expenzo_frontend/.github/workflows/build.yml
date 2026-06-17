@@ -37,3 +37,13 @@ jobs:
         with:
           name: expenzo-app-update
           path: expenzo_frontend/build/app/outputs/flutter-apk/app-release.apk
+
+      - name: Build Web
+        run: flutter build web --release --base-href "/Expenzo/"
+        working-directory: expenzo_frontend
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./expenzo_frontend/build/web
